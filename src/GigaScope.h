@@ -1,5 +1,5 @@
-#ifndef Gigascope_h
-#define Gigascope_h
+#ifndef GigaScope_h
+#define GigaScope_h
 
 #include <Arduino.h>
 
