@@ -1,4 +1,4 @@
-#include "GigaScope.h"
+#include "Gigascope.h"
 #include "STMSpeeduino.h"
 
 const long ValuesToStore = 30000;  //How many values to store, max 30000, the more the higher accuracy
