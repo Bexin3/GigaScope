@@ -1,5 +1,5 @@
+#include "GigaScope.h"
 #include "STMSpeeduino.h"
-#include "Gigascope.h"
 
 const long ValuesToStore = 30000;  //How many values to store, max 30000, the more the higher accuracy
 const int delayms = 0;            //Delay between each read sequence
