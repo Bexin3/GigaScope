@@ -1,4 +1,4 @@
-#include "Gigascope.h"
+#include "GigaScope.h"
 
 GigascopeValue Freqn(int BottomBoundary, int TopBoundary, int timePassedPC, int Values[]) {
   
