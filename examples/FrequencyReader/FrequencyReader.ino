@@ -6,7 +6,7 @@ const int AdcChannel = A0;        //Channel to read from
 const float voltage = 3.3f;       //Your board voltage
 const int delaybetweenreads = 0;
 
-const int Resolution = 8;      //8,10,12,14,16 on giga r1 wifi, depends on your board
+const int Resolution = 8;      //Only change on boards that support it, and allow it in void setup first.
 
 unsigned long timeBegin;
 unsigned long timeEnd;
@@ -18,7 +18,7 @@ int16_t CurrentValue;
 
 
 void setup() {
-  analogReadResolution(Resolution);
+  //analogReadResolution(Resolution); //Only allow for supported boards
   Serial.begin(115200);
 }
 
@@ -61,10 +61,10 @@ void print() {
   Serial.print(Results.DutyCycle);
   Serial.println(" %");
   Serial.print("Min Voltage: ");
-  Serial.print(Results.Min*voltage/pow(2, Resolution),4); //Calculate actual voltage and print
+  Serial.print(Results.Min*voltage/(pow(2, Resolution)-1),4); //Calculate actual voltage and print
   Serial.println(" v");
   Serial.print("Max Voltage: ");
-  Serial.print(Results.Max*voltage/pow(2, Resolution),4); //Calculate actual voltage and print
+  Serial.print(Results.Max*voltage/(pow(2, Resolution)-1),4); //Calculate actual voltage and print
   Serial.println(" v");
 }
 
