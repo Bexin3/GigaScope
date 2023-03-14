@@ -1,101 +1,75 @@
 #include "Gigascope.h"
-#include "STMSpeeduino.h"
 
-const long ValuesToStore = 30000;  //How many values to store, max 30000, the more the higher accuracy
+const int ValuesToStore = 4000;   //How many values to store, more values - more accuracy
 const int delayms = 0;            //Delay between each read sequence
 const int AdcChannel = A0;        //Channel to read from
-const double ClockSpeed = 40;      //clock speed in mhz
+const float voltage = 3.3f;       //Your board voltage
+const int delaybetweenreads = 0;
 
-int Resolution = 16;      //8,10,12,14,16
-int SampleTime = 0;       //Time for taking a sample, 0-7
-const int Samplenum = 0;  //0-1023, is 1 more than specified, oversampling will increase the value, right shifting fixes that
+const int Resolution = 16;      //8,10,12,14,16 on giga r1 wifi, depends on your board
 
-float minBound = 0.3f;  //Boundary fraction value has to go below to register as 0
-float maxBound = 0.7f;  //Boundary fraction value has to go below to register as 1
+const float minBound = 0.3f;  //Boundary fraction value has to go below to register as 0
+const float maxBound = 0.7f;  //Boundary fraction value has to go below to register as 1
 bool Diffmode = 0;      //Limits channel selection to A1 positive, A0 negative
-
-int Gain = 1;  //Setting to more than 1 will limit positive channel to 4, which means that A0 is where amplified signal is, and A2 is source for it. Settings - 1, 2, 4, 8, 15, not supported on Portenta or in diffmode.
-int BottomBoundary;
-int TopBoundary;
 
 unsigned long timeBegin;
 unsigned long timeEnd;
 
-double Frequency;
-float DutyCycle;
+GigaScope Results;
 
 int Values[ValuesToStore] = {};
-int16_t CurrentValue = 0;  //tracks current stored value
+int16_t CurrentValue;
 
-float MinVoltage;
-float MaxVoltage;
 
 void setup() {
-
-
-  analogWrite(5, 127);
-
-  if (Gain == 1) {
-    ADC1Begin(AdcChannel, Resolution, Diffmode, ClockSpeed);
-  } else {
-    OPAMPCFG(Gain);
-    ADC1Begin(A0, Resolution, 0, SampleTime);
-    //ADCInterleaved(4, Resolution, Diffmode);
-  }
-
+  analogWrite(7, 127);
+  analogReadResolution(Resolution);
   Serial.begin(2000000);
 }
 
 
 void loop() {
 
-  timeBegin = micros();
+CurrentValue = 0; //Reset value currently being processed
+
+  timeBegin = micros(); //Find out when did reads began
 
   while (CurrentValue < ValuesToStore) {
-    collectloop();
+    collectloop();      //Collect values
   };
 
-  timeEnd = micros();
+  timeEnd = micros(); //Find out when did reads finish
 
-  CurrentValue = 0;
 
-  Boundaries MinMax = findMinMax(Values);
-  MinVoltage = MinMax.Min;
-  MaxVoltage = MinMax.Max;
+  Results = Calculate(Values, timeEnd-timeBegin, ValuesToStore);
+  /*
+  Calculate min, max, frequency and duty cycle, 
+  minBound and maxBound are fully optional, defines when signal is considered as high
+  */
 
-  Boundaries boundaries = BoundaryFind(MinVoltage, MaxVoltage, minBound, maxBound);
-  BottomBoundary = boundaries.Min;
-  TopBoundary = boundaries.Max;
-
-  GigascopeValue Results = Freqn(BottomBoundary, TopBoundary, timeEnd-timeBegin, Values);
-  Frequency = Results.Frequency;
-  DutyCycle = Results.DutyCycle;
-
-  print();
-  delay(delayms);
+  print(); //Print all relevant values
+  delay(delayms); //Wait between next loop
 }
 
 
 void collectloop() {
-  Values[CurrentValue] = CatchADC1Value();
-  CurrentValue += 1;
+  Values[CurrentValue] = analogRead(AdcChannel); //Collect value
+  CurrentValue += 1; //Add value
+  delayMicroseconds(delaybetweenreads); //Delay before next collection
 }
-
-
 
 void print() {
   Serial.print("Frequency: ");
-  Serial.print(Frequency);
+  Serial.print(Results.Frequency);
   Serial.println(" hz");
   Serial.print("Duty Cycle: ");
-  Serial.print(DutyCycle);
+  Serial.print(Results.DutyCycle);
   Serial.println(" %");
   Serial.print("Min Voltage: ");
-  Serial.print(MinVoltage*3.3f/Gain/pow(2, Resolution),4);
+  Serial.print(Results.Min*voltage/pow(2, Resolution),4); //Calculate actual voltage and print
   Serial.println(" v");
   Serial.print("Max Voltage: ");
-  Serial.print(MaxVoltage*3.3f/Gain/pow(2, Resolution),4);
+  Serial.print(Results.Max*voltage/pow(2, Resolution),4); //Calculate actual voltage and print
   Serial.println(" v");
 }
-
 

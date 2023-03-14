@@ -1,30 +1,27 @@
+
 #ifndef Gigascope_h
 #define Gigascope_h
 
 #include <Arduino.h>
 
 
-struct GigascopeValue {
+struct GigaScope {     //Struct with results
   double Frequency;
-  double DutyCycle;
-};
-
-struct Boundaries {
-  int Min;
-  int Max;
-  
+  float DutyCycle;
+  long Min;
+  long Max;
 };
 
 
-GigascopeValue Freqn(int BottomBoundary, int TopBoundary, int timePassedPC, int Values[]);
-Boundaries findMinMax(int Values[]);
-Boundaries BoundaryFind(int MinVoltage, int MaxVoltage, float minBound, float maxBound);
+
+GigaScope Calculate(int Values[], long timePassedPC, int ValuesToStore, float minBound = 0.3, float maxBound = 0.7);
+
+
+GigaScope Freqn(int BottomBoundary, int TopBoundary, long timePassedPC, int Values[], int ValuesToStore);
+GigaScope findMinMax(int Values[], int ValuesToStore);
+GigaScope BoundaryFind(int MinVoltage, int MaxVoltage, float minBound, float maxBound);
 
 
 
-
-//struct GigascopeVal GigascopeValues;
-
-//extern GigascopeVal GigascopeValues;
 
 #endif
