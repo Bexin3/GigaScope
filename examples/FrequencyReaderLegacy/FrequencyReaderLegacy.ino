@@ -5,7 +5,7 @@ const int delayms = 0;            //Delay between each read sequence
 const int AdcChannel = A0;        //Channel to read from
 const float voltage = 3.3f;       //Your board voltage
 
-const int Resolution = 10;      //8,10,12,14,16 on giga r1 wifi, depends on your board
+const int Resolution = 12;      //8,10,12,14,16 on giga r1 wifi, depends on your board
 
 const float minBound = 0.3f;  //Boundary fraction value has to go below to register as 0
 const float maxBound = 0.7f;  //Boundary fraction value has to go below to register as 1
