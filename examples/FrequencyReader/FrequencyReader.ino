@@ -8,10 +8,6 @@ const int delaybetweenreads = 0;
 
 const int Resolution = 8;      //8,10,12,14,16 on giga r1 wifi, depends on your board
 
-const float minBound = 0.3f;  //Boundary fraction value has to go below to register as 0
-const float maxBound = 0.7f;  //Boundary fraction value has to go below to register as 1
-bool Diffmode = 0;      //Limits channel selection to A1 positive, A0 negative
-
 unsigned long timeBegin;
 unsigned long timeEnd;
 
