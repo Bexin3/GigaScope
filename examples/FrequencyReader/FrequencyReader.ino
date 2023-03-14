@@ -6,7 +6,7 @@ const int AdcChannel = A0;        //Channel to read from
 const float voltage = 3.3f;       //Your board voltage
 const int delaybetweenreads = 0;
 
-const int Resolution = 8;      //Only change on boards that support it, and allow it in void setup first.
+const int Resolution = 10;      //Only change on boards that support it, and allow it in void setup first.
 
 unsigned long timeBegin;
 unsigned long timeEnd;
@@ -37,10 +37,8 @@ CurrentValue = 0; //Reset value currently being processed
 
 
   Results = Calculate(Values, timeEnd-timeBegin, ValuesToStore);
-  /*
-  Calculate min, max, frequency and duty cycle, 
-  minBound and maxBound are fully optional, defines when signal is considered as high
-  */
+  //Calculate min, max, frequency and duty cycle, minBound and maxBound are fully optional, defines when signal is considered as high
+
 
   print(); //Print all relevant values
   delay(delayms); //Wait between next loop
@@ -67,4 +65,3 @@ void print() {
   Serial.print(Results.Max*voltage/(pow(2, Resolution)-1),4); //Calculate actual voltage and print
   Serial.println(" v");
 }
-
