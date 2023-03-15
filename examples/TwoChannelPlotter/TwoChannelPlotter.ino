@@ -1,4 +1,3 @@
-#include "STMSpeeduino.h"
 
 const long ValuesToStore = 300;  //How many values to store, max 30000, the more the higher accuracy
 int16_t CurrentValue = 0;  //tracks current stored value
@@ -8,19 +7,16 @@ int ADC2Values[ValuesToStore] = {};
 
 const int ADC1Channel = A0; //ADC 1 channel
 const int ADC2Channel = A1; //ADC 2 channel
-const int Resolution = 16; //8, 10, 12, 14, 16
-double ClockSpeed = 40; //Clock speed in mhz, stable up to 40mhz, may decrease range further
-int SampleTime = 0; //0 to 7
-int Samplenum = 0; //Number of samples, is 1 more, 0 to 1023
+const int Resolution = 10;
+
 
 long Val1;
 long Val2;
 
 
 void setup() {
-  // put your setup code here, to run once:
+
 Serial.begin(9600);
-ADCSimultaneous(ADC1Channel, ADC2Channel, Resolution, ClockSpeed, SampleTime, Samplenum);
 
 }
 
@@ -38,8 +34,8 @@ CurrentValue = 0;
 }
 
 void collectloop() {
-  ADC1Values[CurrentValue] = CatchADC1Value();
-  ADC2Values[CurrentValue] = CatchADC2Value();
+  ADC1Values[CurrentValue] = analogRead(ADC1Channel);
+  ADC2Values[CurrentValue] = analogRead(ADC2Channel);
   CurrentValue += 1;
 }
 
