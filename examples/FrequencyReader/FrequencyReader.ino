@@ -3,7 +3,7 @@
 const int ValuesToStore = 127;   //How many values to store, more values - more accuracy
 const int delayms = 0;            //Delay between each read sequence
 const int AdcChannel = A0;        //Channel to read from
-const float voltage = 3.3f;       //Your board voltage
+const float voltage = 3.3f;       //Your board voltage / VREF
 const int delaybetweenreads = 0;
 
 const int Resolution = 10;      //Only change on boards that support it, and allow it in void setup first.
